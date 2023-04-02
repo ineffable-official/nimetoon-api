@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Anime;
 use App\Models\File;
+use App\Models\Genre;
+use App\Models\Season;
+use App\Models\Status;
+use App\Models\Studio;
+use App\Models\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -13,9 +18,29 @@ class AnimeController extends Controller
     public function index()
     {
         $data = Anime::all();
-        return response()->json(["status" => 1, "data" => $data], 200);
+
+        $data_f = $this->formatData($data);
+
+        return response()->json(["status" => 1, "data" => $data_f], 200);
     }
 
+    function formatData($data)
+    {
+        foreach ($data as $key => $value) {
+            $data[$key]->type = Type::find($value->type);
+            $data[$key]->status = Status::find($value->status);
+            $data[$key]->studio = Studio::find($value->studio);
+            $data[$key]->season = Season::find($value->season);
+            $genres_decod = json_decode($value->genres);
+            $genre_list = array();
+            foreach ($genres_decod as $genre) {
+                $genre_list[] = Genre::find($genre);
+            }
+            $data[$key]->genres = $genre_list;
+        }
+
+        return $data;
+    }
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -29,7 +54,8 @@ class AnimeController extends Controller
             "season" => "required|integer",
             "studio" => "required|integer",
             "genres" => "required|string",
-            "images" => "required|string",
+            "images" => "required|file",
+            ""
         ]);
 
         if ($validator->fails()) {
@@ -39,7 +65,7 @@ class AnimeController extends Controller
         $images_file = $request->file("images");
         $images = null;
         if ($images_file) {
-            $images = Storage::put("/images", $images_file);
+            $images = Storage::disk("public")->put("/images", $images_file);
 
             $file = new File();
             $file->name = $images_file->hashName();

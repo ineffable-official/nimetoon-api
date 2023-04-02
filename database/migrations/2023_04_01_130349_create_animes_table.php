@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string("title");
             $table->string("slug");
             $table->foreignId("type");
-            $table->string("episodes");
+            $table->integer("episodes");
             $table->foreignId("status");
             $table->date("aired_from");
             $table->date("aired_to");

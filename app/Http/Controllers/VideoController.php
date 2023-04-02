@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Anime;
+use App\Models\File;
 use App\Models\Video;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class VideoController extends Controller
@@ -11,7 +14,15 @@ class VideoController extends Controller
     public function index()
     {
         $data = Video::all();
-        return response()->json(["status" => 1, "data" => $data], 200);
+        $data_f = $this->formatData($data);
+        return response()->json(["status" => 1, "data" => $data_f], 200);
+    }
+
+    function formatData($data){
+        foreach ($data as $key => $value) {
+            $data[$key]->anime = Anime::find($value->anime);
+        }
+        return $data;
     }
 
     public function store(Request $request)
@@ -20,20 +31,48 @@ class VideoController extends Controller
             "title" => "required|string",
             "slug" => "required|string",
             "anime" => "required|integer",
-            "images" => "required|string",
-            "videos" => "required|string",
+            "images" => "required|file",
+            "videos" => "required|file",
         ]);
 
         if ($validator->fails()) {
             return response()->json(["status" => 0, "message" => $validator->errors()], 200);
         }
 
+        $image_file = $request->file("images");
+        $images = null;
+
+        if($image_file){
+            $images = Storage::disk("public")->put("/images", $image_file);
+
+            $file = new File();
+            $file->name = $image_file->hashName();
+            $file->size = $image_file->getSize();
+            $file->mime = $image_file->getExtension();
+            $file->url = $images;
+            $file->save();
+        }
+
+        $video_file = $request->file("videos");
+        $videos = null;
+
+        if($video_file){
+            $videos = Storage::disk("public")->put("/videos", $video_file);
+
+            $file = new File();
+            $file->name = $video_file->hashName();
+            $file->size = $video_file->getSize();
+            $file->mime = $video_file->getExtension();
+            $file->url = $videos;
+            $file->save();
+        }
+
         $video = new Video;
         $video->title = $request->title;
         $video->slug = $request->slug;
         $video->anime = $request->anime;
-        $video->images = $request->images;
-        $video->videos = $request->videos;
+        $video->images = $images;
+        $video->videos = $videos;
         $video->save();
 
         return response()->json(["status" => 1, "message" => "Successfully", "data" => $video], 200);
