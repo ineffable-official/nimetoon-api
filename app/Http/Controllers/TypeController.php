@@ -8,8 +8,14 @@ use Illuminate\Support\Facades\Validator;
 
 class TypeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->search) {
+            $data = Type::where("name", "LIKE", "%" . $request->search . "%")->get();
+
+            return response()->json(["status" => 1, "data" => $data], 200);
+        }
+        
         $data = Type::all();
         return response()->json(["status" => 1, "data" => $data], 200);
     }
@@ -33,8 +39,7 @@ class TypeController extends Controller
 
     public function destroy(Request $request)
     {
-        $data = Type::findOrFail($request->id);
-        $data->delete();
+        $data = Type::findOrFail($request->id)->delete();
 
         return response()->json(["status" => 1, "message" => "Successfully"], 200);
     }

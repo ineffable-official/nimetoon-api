@@ -8,8 +8,14 @@ use Illuminate\Support\Facades\Validator as FacadesValidator;
 
 class StudioController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->search) {
+            $data = Studio::where("name", "LIKE", "%" . $request->search . "%")->get();
+
+            return response()->json(["status" => 1, "data" => $data], 200);
+        }
+
         $data = Studio::all();
         return response()->json(["status" => 1, "data" => $data], 200);
     }

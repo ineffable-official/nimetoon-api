@@ -11,14 +11,27 @@ use Illuminate\Support\Facades\Validator;
 
 class VideoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->search) {
+            $data = Video::where("name", "LIKE", "%" . $request->search . "%")->get();
+
+            return response()->json(["status" => 1, "data" => $this->formatData($data)], 200);
+        }
+
+        if ($request->slug) {
+            $data = Video::where("slug", $request->slug)->get();
+
+            return response()->json(["status" => 1, "data" => $this->formatData($data)], 200);
+        }
+
         $data = Video::all();
         $data_f = $this->formatData($data);
         return response()->json(["status" => 1, "data" => $data_f], 200);
     }
 
-    function formatData($data){
+    function formatData($data)
+    {
         foreach ($data as $key => $value) {
             $data[$key]->anime = Anime::find($value->anime);
         }
@@ -31,6 +44,7 @@ class VideoController extends Controller
             "title" => "required|string",
             "slug" => "required|string",
             "anime" => "required|integer",
+            "descriptions" => "required|string",
             "images" => "required|file",
             "videos" => "required|file",
         ]);
@@ -42,7 +56,7 @@ class VideoController extends Controller
         $image_file = $request->file("images");
         $images = null;
 
-        if($image_file){
+        if ($image_file) {
             $images = Storage::disk("public")->put("/images", $image_file);
 
             $file = new File();
@@ -56,7 +70,7 @@ class VideoController extends Controller
         $video_file = $request->file("videos");
         $videos = null;
 
-        if($video_file){
+        if ($video_file) {
             $videos = Storage::disk("public")->put("/videos", $video_file);
 
             $file = new File();
@@ -71,6 +85,7 @@ class VideoController extends Controller
         $video->title = $request->title;
         $video->slug = $request->slug;
         $video->anime = $request->anime;
+        $video->descriptions = $request->descriptions;
         $video->images = $images;
         $video->videos = $videos;
         $video->save();

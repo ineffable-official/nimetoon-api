@@ -8,8 +8,14 @@ use Illuminate\Support\Facades\Validator;
 
 class StatusController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->search) {
+            $data = Status::where("name", "LIKE", "%" . $request->search . "%")->get();
+
+            return response()->json(["status" => 1, "data" => $data], 200);
+        }
+        
         $data = Status::all();
         return response()->json(["status" => 1, "data" => $data], 200);
     }

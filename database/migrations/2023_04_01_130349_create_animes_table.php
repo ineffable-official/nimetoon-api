@@ -23,6 +23,7 @@ return new class extends Migration
             $table->foreignId("season");
             $table->foreignId("studio");
             $table->json("genres");
+            $table->string("descriptions");
             $table->string("images");
             $table->timestamps();
         });

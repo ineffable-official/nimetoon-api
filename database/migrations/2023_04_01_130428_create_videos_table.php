@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string("title");
             $table->string("slug");
             $table->foreignId("anime");
+            $table->string("descriptions");
             $table->string("images");
             $table->string("videos");
             $table->timestamps();

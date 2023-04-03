@@ -8,8 +8,14 @@ use Illuminate\Support\Facades\Validator;
 
 class FileController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->search) {
+            $data = File::where("name", "LIKE", "%" . $request->search . "%")->get();
+
+            return response()->json(["status" => 1, "data" => $data], 200);
+        }
+        
         $data = File::all();
         return response()->json(["status" => 1, "data" => $data], 200);
     }

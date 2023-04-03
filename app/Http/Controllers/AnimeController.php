@@ -15,8 +15,20 @@ use Illuminate\Support\Facades\Validator;
 
 class AnimeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->search) {
+            $data = Anime::where("title", "LIKE", "%" . $request->search . "%")->get();
+
+            return response()->json(["status" => 1, "data" => $this->formatData($data)], 200);
+        }
+
+        if ($request->slug) {
+            $data = Anime::where("slug", $request->slug)->get();
+
+            return response()->json(["status" => 1, "data" => $this->formatData($data)], 200);
+        }
+
         $data = Anime::all();
 
         $data_f = $this->formatData($data);
@@ -54,8 +66,8 @@ class AnimeController extends Controller
             "season" => "required|integer",
             "studio" => "required|integer",
             "genres" => "required|string",
-            "images" => "required|file",
-            ""
+            "descriptions" => "required|string",
+            "images" => "required|file"
         ]);
 
         if ($validator->fails()) {
@@ -85,6 +97,7 @@ class AnimeController extends Controller
         $anime->season = $request->season;
         $anime->studio = $request->studio;
         $anime->genres = $request->genres;
+        $anime->descriptions = $request->descriptions;
         $anime->images = $images;
         $anime->save();
 

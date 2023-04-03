@@ -24,38 +24,38 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get("/animes", [AnimeController::class, "index"]);
-Route::post("/animes/store", [AnimeController::class, "store"]);
+Route::post("/animes", [AnimeController::class, "store"]);
 Route::delete("/animes", [AnimeController::class, "destroy"]);
 
 Route::get("/videos", [VideoController::class, "index"]);
-Route::post("/videos/store", [VideoController::class, "store"]);
+Route::post("/videos", [VideoController::class, "store"]);
 Route::delete("/videos", [VideoController::class, "destroy"]);
 
 Route::get("/viewer", [ViewerController::class, "index"]);
 Route::delete("/viewer", [ViewerController::class, "destroy"]);
 
 Route::get("/files", [FileController::class, "index"]);
-Route::post("/files/store", [FileController::class, "store"]);
+Route::post("/files", [FileController::class, "store"]);
 Route::delete("/files", [FileController::class, "destroy"]);
 
 Route::get("/types", [TypeController::class, "index"]);
-Route::post("/types/store", [TypeController::class, "store"]);
+Route::post("/types", [TypeController::class, "store"]);
 Route::delete("/types", [TypeController::class, "destroy"]);
 
 Route::get("/genres", [GenreController::class, "index"]);
-Route::post("/genres/store", [GenreController::class, "store"]);
+Route::post("/genres", [GenreController::class, "store"]);
 Route::delete("/genres", [GenreController::class, "destroy"]);
 
 Route::get("/seasons", [SeasonController::class, "index"]);
-Route::post("/seasons/store", [SeasonController::class, "store"]);
+Route::post("/seasons", [SeasonController::class, "store"]);
 Route::delete("/seasons", [SeasonController::class, "destroy"]);
 
 Route::get("/statuses", [StatusController::class, "index"]);
-Route::post("/statuses/store", [StatusController::class, "store"]);
+Route::post("/statuses", [StatusController::class, "store"]);
 Route::delete("/statuses", [StatusController::class, "destroy"]);
 
 Route::get("/studios", [StudioController::class, "index"]);
-Route::post("/studios/store", [StudioController::class, "store"]);
+Route::post("/studios", [StudioController::class, "store"]);
 Route::delete("/studios", [StudioController::class, "destroy"]);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
