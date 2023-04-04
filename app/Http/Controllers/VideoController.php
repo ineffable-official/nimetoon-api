@@ -14,13 +14,19 @@ class VideoController extends Controller
     public function index(Request $request)
     {
         if ($request->search) {
-            $data = Video::where("name", "LIKE", "%" . $request->search . "%")->get();
+            $data = Video::where("title", "LIKE", "%" . $request->search . "%")->get();
 
             return response()->json(["status" => 1, "data" => $this->formatData($data)], 200);
         }
 
         if ($request->slug) {
             $data = Video::where("slug", $request->slug)->get();
+
+            return response()->json(["status" => 1, "data" => $this->formatData($data)], 200);
+        }
+
+        if ($request->anime_id) {
+            $data = Video::where("anime", $request->anime_id)->get();
 
             return response()->json(["status" => 1, "data" => $this->formatData($data)], 200);
         }
