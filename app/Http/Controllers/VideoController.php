@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Anime;
 use App\Models\File;
 use App\Models\Video;
+use App\Models\Viewer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -22,7 +23,15 @@ class VideoController extends Controller
         if ($request->slug) {
             $data = Video::where("slug", $request->slug)->get();
 
-            return response()->json(["status" => 1, "data" => $this->formatData($data)], 200);
+            
+            if($request->record){
+                if($data->first()){
+                    $next = Video::where("id", ">", $data->first()->id)->orderBy("id", "desc")->get()->first();
+                    $previous = Video::where("id", "<", $data->first()->id)->orderBy("id", "desc")->get()->first();
+                    return response()->json(["status" => 1, "data" => $this->formatData($data), "record"=>["next" => $this->formatSingleData($next), "previous" => $this->formatSingleData($previous)]], 200);
+                }
+            }
+            return response()->json(["status" => 1, "data" => $this->formatData($data),], 200);
         }
 
         if ($request->anime_id) {
@@ -40,8 +49,18 @@ class VideoController extends Controller
     {
         foreach ($data as $key => $value) {
             $data[$key]->anime = Anime::find($value->anime);
+            $data[$key]->viewer = count(Viewer::where($value->id)->get());
         }
         return $data;
+    }
+
+    function formatSingleData($data)
+    {
+        if($data != null){
+            $data->anime = Anime::find($data->anime);
+            $data->viewer = count(Viewer::where($data->id)->get());
+            return $data;
+        }
     }
 
     public function store(Request $request)

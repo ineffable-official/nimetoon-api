@@ -32,15 +32,20 @@ Route::get("/login", function () {
 })->name("login");
 
 Route::post("/login", [UserController::class, "login"]);
+Route::post("/signup", [UserController::class, "signup"]);
 
 Route::middleware("auth:sanctum")->group(function () {
     Route::get("/account", [UserController::class, "account"]);
+    Route::post("/logout", [UserController::class, "logout"]);
 
     Route::post("/animes", [AnimeController::class, "store"]);
     Route::delete("/animes", [AnimeController::class, "destroy"]);
+
     Route::post("/videos", [VideoController::class, "store"]);
     Route::delete("/videos", [VideoController::class, "destroy"]);
+
     Route::get("/viewer", [ViewerController::class, "index"]);
+    Route::post("/viewer", [ViewerController::class, "store"]);
     Route::delete("/viewer", [ViewerController::class, "destroy"]);
 
     Route::get("/files", [FileController::class, "index"]);

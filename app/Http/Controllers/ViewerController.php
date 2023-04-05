@@ -24,7 +24,7 @@ class ViewerController extends Controller
     {
         $validator = Validator::make($request->all(), [
             "user" => "required|integer",
-            "anime" => "required|integer",
+            "video" => "required|integer",
             "ip" => "required|string",
         ]);
 
@@ -34,7 +34,7 @@ class ViewerController extends Controller
 
         $viewer = new Viewer;
         $viewer->user = $request->user;
-        $viewer->anime = $request->anime;
+        $viewer->video = $request->video;
         $viewer->ip = $request->ip;
         $viewer->save();
 
