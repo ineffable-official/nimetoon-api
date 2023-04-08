@@ -25,6 +25,7 @@ return new class extends Migration
             $table->json("genres");
             $table->string("descriptions");
             $table->string("images");
+            $table->string("images_square");
             $table->timestamps();
         });
     }

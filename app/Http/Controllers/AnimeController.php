@@ -67,7 +67,8 @@ class AnimeController extends Controller
             "studio" => "required|integer",
             "genres" => "required|string",
             "descriptions" => "required|string",
-            "images" => "required|file"
+            "images" => "required|file",
+            "images_square" => "required|file"
         ]);
 
         if ($validator->fails()) {
@@ -84,6 +85,21 @@ class AnimeController extends Controller
             $file->size = $images_file->getSize();
             $file->mime = $images_file->getExtension();
             $file->url = $images;
+            $file->save();
+        }
+
+        $images_square_file = $request->file("images_square");
+        $images_square = null;
+
+        if($images_square_file){
+            $images_square = Storage::disk("public")->put("/images", $images_square_file);
+
+            $file = new File();
+            $file->name = $images_square->hashName();
+            $file->size = $images_square->getSize();
+            $file->mime = $images_square->getExtension();
+            $file->url = $images_square;
+            $file->save();
         }
 
         $anime = new Anime;
@@ -99,6 +115,7 @@ class AnimeController extends Controller
         $anime->genres = $request->genres;
         $anime->descriptions = $request->descriptions;
         $anime->images = $images;
+        $anime->images_square = $images_square;
         $anime->save();
 
         return response()->json(["status" => 1, "message" => "Successfully", "data" => $anime], 200);

@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             "email" => "faizunmu00@gmail.com",
             "role" => "admin",
             "password" => "37920320Ba.",
+            "images" => null
         ]);
     }
 }
