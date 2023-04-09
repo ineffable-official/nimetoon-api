@@ -23,12 +23,12 @@ class VideoController extends Controller
         if ($request->slug) {
             $data = Video::where("slug", $request->slug)->get();
 
-            
-            if($request->record){
-                if($data->first()){
+
+            if ($request->record) {
+                if ($data->first()) {
                     $next = Video::where("id", ">", $data->first()->id)->orderBy("id", "desc")->get()->first();
                     $previous = Video::where("id", "<", $data->first()->id)->orderBy("id", "desc")->get()->first();
-                    return response()->json(["status" => 1, "data" => $this->formatData($data), "record"=>["next" => $this->formatSingleData($next), "previous" => $this->formatSingleData($previous)]], 200);
+                    return response()->json(["status" => 1, "data" => $this->formatData($data), "record" => ["next" => $this->formatSingleData($next), "previous" => $this->formatSingleData($previous)]], 200);
                 }
             }
             return response()->json(["status" => 1, "data" => $this->formatData($data),], 200);
@@ -49,16 +49,16 @@ class VideoController extends Controller
     {
         foreach ($data as $key => $value) {
             $data[$key]->anime = Anime::find($value->anime);
-            $data[$key]->viewer = count(Viewer::where($value->id)->get());
+            $data[$key]->viewer = count(Viewer::where("video", $value->id)->get());
         }
         return $data;
     }
 
     function formatSingleData($data)
     {
-        if($data != null){
+        if ($data != null) {
             $data->anime = Anime::find($data->anime);
-            $data->viewer = count(Viewer::where($data->id)->get());
+            $data->viewer = count(Viewer::where("video", $data->id)->get());
             return $data;
         }
     }

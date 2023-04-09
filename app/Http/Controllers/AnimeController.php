@@ -95,9 +95,9 @@ class AnimeController extends Controller
             $images_square = Storage::disk("public")->put("/images", $images_square_file);
 
             $file = new File();
-            $file->name = $images_square->hashName();
-            $file->size = $images_square->getSize();
-            $file->mime = $images_square->getExtension();
+            $file->name = $images_square_file->hashName();
+            $file->size = $images_square_file->getSize();
+            $file->mime = $images_square_file->getExtension();
             $file->url = $images_square;
             $file->save();
         }

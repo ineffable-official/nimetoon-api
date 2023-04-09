@@ -15,7 +15,7 @@ class FileController extends Controller
 
             return response()->json(["status" => 1, "data" => $data], 200);
         }
-        
+
         $data = File::all();
         return response()->json(["status" => 1, "data" => $data], 200);
     }
