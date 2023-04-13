@@ -39,9 +39,11 @@ Route::middleware("auth:sanctum")->group(function () {
     Route::post("/logout", [UserController::class, "logout"]);
 
     Route::post("/animes", [AnimeController::class, "store"]);
+    Route::put("/animes", [AnimeController::class, "update"]);
     Route::delete("/animes", [AnimeController::class, "destroy"]);
 
     Route::post("/videos", [VideoController::class, "store"]);
+    Route::put("/videos", [VideoController::class, "update"]);
     Route::delete("/videos", [VideoController::class, "destroy"]);
 
     Route::get("/viewer", [ViewerController::class, "index"]);

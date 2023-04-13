@@ -91,7 +91,7 @@ class AnimeController extends Controller
         $images_square_file = $request->file("images_square");
         $images_square = null;
 
-        if($images_square_file){
+        if ($images_square_file) {
             $images_square = Storage::disk("public")->put("/images", $images_square_file);
 
             $file = new File();
@@ -119,6 +119,14 @@ class AnimeController extends Controller
         $anime->save();
 
         return response()->json(["status" => 1, "message" => "Successfully", "data" => $anime], 200);
+    }
+
+    public function update(Request $request)
+    {
+        $data = Anime::find($request->id);
+        $data->update($request->all());
+
+        return response()->json(["status" => 1, "message" => "Successfully", "data" => $data], 200);
     }
 
     public function destroy(Request $request)
