@@ -121,6 +121,9 @@ class VideoController extends Controller
     public function update(Request $request)
     {
         $data = Video::find($request->id);
+        if ($request->all() == null) {
+            return response()->json(["status" => 1, "message" => "Nothing updated", "data" => $data], 200);
+        }
         $data->update($request->all());
 
         return response()->json(["status" => 1, "message" => "Successfully", "data" => $data], 200);
