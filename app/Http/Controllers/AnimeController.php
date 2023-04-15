@@ -138,8 +138,7 @@ class AnimeController extends Controller
             $file->url = $images;
             $file->save();
 
-            $data->images = $images;
-            $data->save();
+            $data->update(["images" => $images]);
         }
 
         $images_square_file = $request->file("images_square");
@@ -155,13 +154,13 @@ class AnimeController extends Controller
             $file->url = $images_square;
             $file->save();
 
-            $data->images_square = $images_square;
-            $data->save();
+            $data->update(["images_square" => $images_square]);
+
         }
 
-        // if ($request->all() == null) {
-        //     return response()->json(["status" => 1, "message" => "Nothing updated", "data" => $data], 200);
-        // }
+        if ($request->all() == null) {
+            return response()->json(["status" => 1, "message" => "Nothing updated", "data" => $data], 200);
+        }
 
         $data->update($request->all());
 
