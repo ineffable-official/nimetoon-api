@@ -159,13 +159,13 @@ class AnimeController extends Controller
             $data->save();
         }
 
-        if ($request->all() == null) {
-            return response()->json(["status" => 1, "message" => "Nothing updated", "data" => $data], 200);
-        }
+        // if ($request->all() == null) {
+        //     return response()->json(["status" => 1, "message" => "Nothing updated", "data" => $data], 200);
+        // }
 
         $data->update($request->all());
 
-        return response()->json(["status" => 1, "message" => "Successfully", "data" => $data, "req" => $request->file("images")], 200);
+        return response()->json(["status" => 1, "message" => "Successfully", "data" => $data, "req" => $request->all()], 200);
     }
 
     public function destroy(Request $request)
