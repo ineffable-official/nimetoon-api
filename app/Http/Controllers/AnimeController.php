@@ -163,7 +163,7 @@ class AnimeController extends Controller
             $data->save();
         }
 
-        return response()->json(["status" => 1, "message" => "Successfully", "data" => $data], 200);
+        return response()->json(["status" => 1, "message" => "Successfully", "data" => $data, "req"=> $request->file("images")], 200);
     }
 
     public function destroy(Request $request)
