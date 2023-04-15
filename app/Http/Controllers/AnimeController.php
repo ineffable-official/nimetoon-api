@@ -160,7 +160,7 @@ class AnimeController extends Controller
             $data->update(["images_square" => $images_square]);
         }
 
-        return response()->json(["status" => 1, "message" => "Successfully", "data" => $data, "req" => $request->all()], 200);
+        return response()->json(["status" => 1, "message" => "Successfully", "data" => $data], 200);
     }
 
     public function destroy(Request $request)

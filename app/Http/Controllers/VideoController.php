@@ -124,10 +124,10 @@ class VideoController extends Controller
         if ($request->all() == null) {
             return response()->json(["status" => 1, "message" => "Nothing updated", "data" => $data], 200);
         }
+
         $data->update($request->all());
 
         $image_file = $request->file("images");
-        $images = null;
 
         if ($image_file) {
             $images = Storage::disk("public")->put("/images", $image_file);
@@ -139,8 +139,7 @@ class VideoController extends Controller
             $file->url = $images;
             $file->save();
 
-            $data->images = $images;
-            $data->save();
+            $data->update(["images" => $images]);
         }
 
         $video_file = $request->file("videos");
@@ -156,8 +155,7 @@ class VideoController extends Controller
             $file->url = $videos;
             $file->save();
 
-            $data->videos = $videos;
-            $data->save();
+            $data->update(["videos" => $videos]);
         }
 
         return response()->json(["status" => 1, "message" => "Successfully", "data" => $data], 200);
