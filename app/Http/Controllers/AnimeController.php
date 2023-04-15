@@ -125,41 +125,40 @@ class AnimeController extends Controller
     {
         $data = Anime::find($request->id);
 
-
-        // $images_file = $request->file("images");
-        // if ($images_file) {
-        //     $images = Storage::disk("public")->put("/images", $images_file);
-
-        //     $file = new File();
-        //     $file->name = $images_file->hashName();
-        //     $file->size = $images_file->getSize();
-        //     $file->mime = $images_file->getExtension();
-        //     $file->url = $images;
-        //     $file->save();
-
-        //     $data->update(["images" => $images]);
-        // }
-
-        // $images_square_file = $request->file("images_square");
-
-        // if ($images_square_file) {
-        //     $images_square = Storage::disk("public")->put("/images", $images_square_file);
-
-        //     $file = new File();
-        //     $file->name = $images_square_file->hashName();
-        //     $file->size = $images_square_file->getSize();
-        //     $file->mime = $images_square_file->getExtension();
-        //     $file->url = $images_square;
-        //     $file->save();
-
-        //     $data->update(["images_square" => $images_square]);
-        // }
-
         if ($request->all() == null) {
             return response()->json(["status" => 1, "message" => "Nothing updated", "data" => $data], 200);
         }
 
         $data->update($request->all());
+
+        $images_file = $request->file("images");
+        if ($images_file) {
+            $images = Storage::disk("public")->put("/images", $images_file);
+
+            $file = new File();
+            $file->name = $images_file->hashName();
+            $file->size = $images_file->getSize();
+            $file->mime = $images_file->getExtension();
+            $file->url = $images;
+            $file->save();
+
+            $data->update(["images" => $images]);
+        }
+
+        $images_square_file = $request->file("images_square");
+
+        if ($images_square_file) {
+            $images_square = Storage::disk("public")->put("/images", $images_square_file);
+
+            $file = new File();
+            $file->name = $images_square_file->hashName();
+            $file->size = $images_square_file->getSize();
+            $file->mime = $images_square_file->getExtension();
+            $file->url = $images_square;
+            $file->save();
+
+            $data->update(["images_square" => $images_square]);
+        }
 
         return response()->json(["status" => 1, "message" => "Successfully", "data" => $data, "req" => $request->all()], 200);
     }
