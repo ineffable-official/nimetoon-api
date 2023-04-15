@@ -124,11 +124,7 @@ class AnimeController extends Controller
     public function update(Request $request)
     {
         $data = Anime::find($request->id);
-        if ($request->all() == null) {
-            return response()->json(["status" => 1, "message" => "Nothing updated", "data" => $data], 200);
-        }
 
-        $data->update($request->all());
 
         $images_file = $request->file("images");
         $images = null;
@@ -163,7 +159,13 @@ class AnimeController extends Controller
             $data->save();
         }
 
-        return response()->json(["status" => 1, "message" => "Successfully", "data" => $data, "req"=> $request->file("images")], 200);
+        if ($request->all() == null) {
+            return response()->json(["status" => 1, "message" => "Nothing updated", "data" => $data], 200);
+        }
+
+        $data->update($request->all());
+
+        return response()->json(["status" => 1, "message" => "Successfully", "data" => $data, "req" => $request->file("images")], 200);
     }
 
     public function destroy(Request $request)
