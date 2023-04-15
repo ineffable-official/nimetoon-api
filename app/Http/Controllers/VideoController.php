@@ -126,6 +126,39 @@ class VideoController extends Controller
         }
         $data->update($request->all());
 
+        $image_file = $request->file("images");
+        $images = null;
+
+        if ($image_file) {
+            $images = Storage::disk("public")->put("/images", $image_file);
+
+            $file = new File();
+            $file->name = $image_file->hashName();
+            $file->size = $image_file->getSize();
+            $file->mime = $image_file->getExtension();
+            $file->url = $images;
+            $file->save();
+
+            $data->update(["images" => $images]);
+        }
+
+        $video_file = $request->file("videos");
+        $videos = null;
+
+        if ($video_file) {
+            $videos = Storage::disk("public")->put("/videos", $video_file);
+
+            $file = new File();
+            $file->name = $video_file->hashName();
+            $file->size = $video_file->getSize();
+            $file->mime = $video_file->getExtension();
+            $file->url = $videos;
+            $file->save();
+
+
+            $data->update(["videos" => $videos]);
+        }
+
         return response()->json(["status" => 1, "message" => "Successfully", "data" => $data], 200);
     }
 
