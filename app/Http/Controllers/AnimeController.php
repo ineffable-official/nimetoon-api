@@ -127,7 +127,6 @@ class AnimeController extends Controller
 
 
         $images_file = $request->file("images");
-        $images = null;
         if ($images_file) {
             $images = Storage::disk("public")->put("/images", $images_file);
 
@@ -142,7 +141,6 @@ class AnimeController extends Controller
         }
 
         $images_square_file = $request->file("images_square");
-        $images_square = null;
 
         if ($images_square_file) {
             $images_square = Storage::disk("public")->put("/images", $images_square_file);
@@ -155,7 +153,6 @@ class AnimeController extends Controller
             $file->save();
 
             $data->update(["images_square" => $images_square]);
-
         }
 
         if ($request->all() == null) {
