@@ -143,7 +143,6 @@ class VideoController extends Controller
         }
 
         $video_file = $request->file("videos");
-        $videos = null;
 
         if ($video_file) {
             $videos = Storage::disk("public")->put("/videos", $video_file);
