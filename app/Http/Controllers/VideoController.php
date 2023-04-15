@@ -139,7 +139,7 @@ class VideoController extends Controller
             $file->url = $images;
             $file->save();
 
-            $data->update(["images" => $images]);
+            $data->update("images", $images);
         }
 
         $video_file = $request->file("videos");
@@ -156,7 +156,7 @@ class VideoController extends Controller
             $file->save();
 
 
-            $data->update(["videos" => $videos]);
+            $data->update("videos", $videos);
         }
 
         return response()->json(["status" => 1, "message" => "Successfully", "data" => $data], 200);
