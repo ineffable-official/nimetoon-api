@@ -29,7 +29,7 @@ class AnimeController extends Controller
             return response()->json(["status" => 1, "data" => $this->formatData($data)], 200);
         }
 
-        $data = Anime::all()->sortBy("updated_at", $request->direction == "ASC" ? SORT_ASC: SORT_DESC);;
+        $data = Anime::all()->sortBy("updated_at", $request->direction == "ASC" ? SORT_ASC: SORT_DESC);
 
         $data_f = $this->formatData($data);
 
