@@ -18,7 +18,7 @@ class AnimeController extends Controller
     public function index(Request $request)
     {
         if ($request->search) {
-            $data = Anime::where("title", "LIKE", "%" . $request->search . "%")->get();
+            $data = Anime::where("title", "LIKE", "%" . $request->search . "%")->sortBy("updated_at", $request->direction == "ASC" ? "asc": "desc")->get();
 
             return response()->json(["status" => 1, "data" => $this->formatData($data)], 200);
         }
@@ -29,7 +29,7 @@ class AnimeController extends Controller
             return response()->json(["status" => 1, "data" => $this->formatData($data)], 200);
         }
 
-        $data = Anime::all();
+        $data = Anime::all()->sortBy("updated_at", $request->direction == "ASC" ? SORT_ASC: SORT_DESC);;
 
         $data_f = $this->formatData($data);
 

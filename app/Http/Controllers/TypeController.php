@@ -15,8 +15,8 @@ class TypeController extends Controller
 
             return response()->json(["status" => 1, "data" => $data], 200);
         }
-        
-        $data = Type::all();
+
+        $data = Type::all()->sortBy("name", SORT_ASC);
         return response()->json(["status" => 1, "data" => $data], 200);
     }
 

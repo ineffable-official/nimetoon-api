@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Anime;
 use App\Models\File;
+use App\Models\Genre;
+use App\Models\Season;
+use App\Models\Status;
+use App\Models\Studio;
+use App\Models\Type;
 use App\Models\Video;
 use App\Models\Viewer;
 use Illuminate\Http\Request;
@@ -15,7 +20,7 @@ class VideoController extends Controller
     public function index(Request $request)
     {
         if ($request->search) {
-            $data = Video::where("title", "LIKE", "%" . $request->search . "%")->get();
+            $data = Video::where("title", "LIKE", "%" . $request->search . "%")->orderBy("updated_at", $request->direction == "ASC" ? "asc": "desc")->get();
 
             return response()->json(["status" => 1, "data" => $this->formatData($data)], 200);
         }
@@ -40,7 +45,7 @@ class VideoController extends Controller
             return response()->json(["status" => 1, "data" => $this->formatData($data)], 200);
         }
 
-        $data = Video::all();
+        $data = Video::all()->sortBy("updated_at", $request->direction == "ASC" ? SORT_ASC: SORT_DESC);
         $data_f = $this->formatData($data);
         return response()->json(["status" => 1, "data" => $data_f], 200);
     }
@@ -48,7 +53,7 @@ class VideoController extends Controller
     function formatData($data)
     {
         foreach ($data as $key => $value) {
-            $data[$key]->anime = Anime::find($value->anime);
+            $data[$key]->anime = $this->formatAnimeData(Anime::find($value->anime));
             $data[$key]->viewer = count(Viewer::where("video", $value->id)->get());
         }
         return $data;
@@ -57,10 +62,26 @@ class VideoController extends Controller
     function formatSingleData($data)
     {
         if ($data != null) {
-            $data->anime = Anime::find($data->anime);
+            $data->anime = $this->formatAnimeData(Anime::find($data->anime));
             $data->viewer = count(Viewer::where("video", $data->id)->get());
             return $data;
         }
+    }
+
+    function formatAnimeData($data)
+    {
+        $data->type = Type::find($data->type);
+        $data->status = Status::find($data->status);
+        $data->studio = Studio::find($data->studio);
+        $data->season = Season::find($data->season);
+        $genres_decod = json_decode($data->genres);
+        $genre_list = array();
+        foreach ($genres_decod as $genre) {
+            $genre_list[] = Genre::find($genre);
+        }
+        $data->genres = $genre_list;
+
+        return $data;
     }
 
     public function store(Request $request)

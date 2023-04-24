@@ -18,7 +18,7 @@ class GenreController extends Controller
             return response()->json(["status" => 1, "data" => $data], 200);
         }
 
-        $data = Genre::all();
+        $data = Genre::all()->sortBy("name", SORT_ASC);
         return response()->json(["status" => 1, "data" => $data], 200);
     }
 

@@ -15,8 +15,8 @@ class StatusController extends Controller
 
             return response()->json(["status" => 1, "data" => $data], 200);
         }
-        
-        $data = Status::all();
+
+        $data = Status::all()->sortBy("name", SORT_ASC);
         return response()->json(["status" => 1, "data" => $data], 200);
     }
 

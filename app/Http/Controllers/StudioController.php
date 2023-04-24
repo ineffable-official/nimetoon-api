@@ -16,7 +16,7 @@ class StudioController extends Controller
             return response()->json(["status" => 1, "data" => $data], 200);
         }
 
-        $data = Studio::all();
+        $data = Studio::all()->sortBy("name", SORT_ASC);
         return response()->json(["status" => 1, "data" => $data], 200);
     }
 

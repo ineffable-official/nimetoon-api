@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('animes', function (Blueprint $table) {
             $table->id();
             $table->string("title");
-            $table->string("slug");
+            $table->string("slug")->unique();
             $table->foreignId("type");
             $table->integer("episodes");
             $table->foreignId("status");
